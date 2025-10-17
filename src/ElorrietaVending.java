@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ElorrietaVending {
@@ -16,12 +17,13 @@ public class ElorrietaVending {
         int[] produktu_motak = new int[PRODUKTU_KOPURUA];
         int[] produktu_kantitatea = new int[PRODUKTU_KOPURUA];
 
-        String[][] produktuak_tabla = new String[PRODUKTU_KOPURUA + 1][4]; // Zer nahi du honek adierazi
-
         init_produktuak(mota_izenak, produktu_izenak, produktu_prezioak, produktu_motak, produktu_kantitatea);
 
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
 
+        for (int i = 0; i < orga.length; i++) {
+            Arrays.fill(orga[i], -1);
+        }
         while (true) {
             int organ_kopurua = Orga.organProduktuak(orga);
             System.out.println(heading("Ongi etorri", 5, "-"));
@@ -44,13 +46,15 @@ public class ElorrietaVending {
 
                     int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
 
-                    Produktuak.produktuakErakutsiMotak(aukera_mota, produktu_motak, produktu_kantitatea, produktu_izenak, produktu_prezioak);
+                    Produktuak.produktuakErakutsiMotak(mota_izenak, aukera_mota, produktu_motak, produktu_kantitatea,
+                            produktu_izenak, produktu_prezioak);
+
                     int aukera_produktua_0;
 
                     while (true) {
                         aukera_produktua_0 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
 
-                        if (produktu_kantitatea[aukera_produktua_0] == 0) { 
+                        if (produktu_kantitatea[aukera_produktua_0] == 0) {
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
                         }
 
@@ -68,11 +72,8 @@ public class ElorrietaVending {
 
                     break;
                 case 2:
-                    for (int i = 0; i < PRODUKTU_KOPURUA; i++) {
-                        if (produktu_kantitatea[i] > 0) {
-                            System.out.println((i + 1) + " - " + produktu_izenak[i] + " - " + round(produktu_prezioak[i], 2) + "€/u");
-                        } // Hau
-                    }
+                    Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea, produktu_izenak,
+                            produktu_prezioak);
 
                     int aukera_produktua_1 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
 
@@ -93,7 +94,8 @@ public class ElorrietaVending {
                         System.err.println("Ez dago produkturik organ kentzeko");
                         itxaronEnter(sc);
                         break;
-                    };
+                    }
+                    ;
 
                     for (int i = 0; i < orga.length; i++) {
                         if (orga[i][1] > 0) {
@@ -117,18 +119,12 @@ public class ElorrietaVending {
 
                     break;
                 case 4:
-                    double subtotal = Orga.orgaSubtotal(orga, produktu_prezioak);
+                    double subtotal = round(Orga.orgaSubtotal(orga, produktu_prezioak), 2);
 
-                    for (int i = 0; i < orga.length; i++) {
-                        if (orga[i][1] > 0) {
-                            System.out.println(
-                                    heading((produktu_izenak[i] + " " + produktu_kantitatea[i] + " x "
-                                            + produktu_prezioak[i]), 2, "-"));
-                        }
-                    }
+                    Laburpena.laburpena(orga, produktu_izenak, produktu_kantitatea, produktu_prezioak);
 
                     System.out.println(heading(("Subtotala: " + subtotal), 3, "-"));
-                    System.out.println(heading(("Totala: " + round(subtotal * 1.21, 2)), 5, "-"));
+                    System.out.println(heading(("Totala: " + round(subtotal * 1.21, 2)), 3, "-"));
 
                     itxaronEnter(sc);
 
@@ -264,7 +260,7 @@ public class ElorrietaVending {
         }
     }
 
-    static double round(double input, int decimal) { 
+    static double round(double input, int decimal) {
         // input: 2.235
         double power = Math.pow(10, decimal); // decimal: 2 power: 100
         return Math.round(input * power) / power; // round(223.5) / 100 = 2.23
