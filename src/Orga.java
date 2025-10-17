@@ -36,7 +36,7 @@ public class Orga {
         double subtotal = 0.0;
         for (int i = 0; i < orga.length; i++) {
             if (orga[i][1] > 0) {
-                subtotal += produktuak_prezioa[i];
+                subtotal += produktuak_prezioa[i] * orga[i][1];
             }
         }
         return subtotal;
@@ -75,6 +75,9 @@ public class Orga {
 
     public static void sartuProduktuaOrgan(int[][] orga, Scanner sc, int[] produktu_kantitatea,
             int aukera_produktua_0) {
+            
+        System.out.println("Organ, " + aukera_produktua_0 + " benetako IDa duen produktua sartuko da");
+
         // Produktua existitzen dela egiaztatu
         if (produktu_kantitatea[aukera_produktua_0] == 0) {
             System.err.println("Aukeratu duzun produktua ez da existitzen.");
@@ -82,6 +85,9 @@ public class Orga {
         }
 
         int produktua_orga_id = Orga.organProduktua(orga, aukera_produktua_0);
+
+        System.out.println("Organ, " + );
+
         int maxKantitatea = produktu_kantitatea[aukera_produktua_0];
 
         // Eskatu erabiltzaileari kantitatea beti

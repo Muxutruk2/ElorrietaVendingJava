@@ -16,6 +16,8 @@ public class ElorrietaVending {
         int[] produktu_motak = new int[PRODUKTU_KOPURUA];
         int[] produktu_kantitatea = new int[PRODUKTU_KOPURUA];
 
+        String[][] produktuak_tabla = new String[PRODUKTU_KOPURUA + 1][4]; // Zer nahi du honek adierazi
+
         init_produktuak(mota_izenak, produktu_izenak, produktu_prezioak, produktu_motak, produktu_kantitatea);
 
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
@@ -41,17 +43,23 @@ public class ElorrietaVending {
                     }
 
                     int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
-                    for (int i = 0; i < PRODUKTU_KOPURUA; i++) {
-                        if (produktu_kantitatea[i] > 0 && produktu_motak[i] == aukera_mota) {
-                            System.out.println((i + 1) + " - " + produktu_izenak[i]);
+
+                    Produktuak.produktuakErakutsiMotak(aukera_mota, produktu_motak, produktu_kantitatea, produktu_izenak, produktu_prezioak);
+                    int aukera_produktua_0;
+
+                    while (true) {
+                        aukera_produktua_0 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
+
+                        if (produktu_kantitatea[aukera_produktua_0] == 0) { 
+                            System.err.println("Aukeratu duzun produktua ez da existitzen");
                         }
-                    }
 
-                    int aukera_produktua_0 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
-
-                    if (produktu_motak[aukera_produktua_0] != aukera_mota) {
-                        System.err.println(
-                                "ADI! Aukeratu duzun produktua, ez da aukeratu duzun motaren parte. Hala ere, organ sartuko da");
+                        if (produktu_motak[aukera_produktua_0] != aukera_mota) {
+                            System.err.println("Aukeratu duzun produktua ez da aukeratu duzun motaren parte");
+                        } else {
+                            // Aukeratu duen produktua mota zuzena du
+                            break;
+                        }
                     }
 
                     Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua_0);
@@ -62,8 +70,8 @@ public class ElorrietaVending {
                 case 2:
                     for (int i = 0; i < PRODUKTU_KOPURUA; i++) {
                         if (produktu_kantitatea[i] > 0) {
-                            System.out.println((i + 1) + " - " + produktu_izenak[i]);
-                        }
+                            System.out.println((i + 1) + " - " + produktu_izenak[i] + " - " + round(produktu_prezioak[i], 2) + "€/u");
+                        } // Hau
                     }
 
                     int aukera_produktua_1 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
@@ -80,6 +88,12 @@ public class ElorrietaVending {
                     break;
                 case 3:
                     System.out.println("Produktua kendu");
+
+                    if (Orga.organProduktuak(orga) == 0) {
+                        System.err.println("Ez dago produkturik organ kentzeko");
+                        itxaronEnter(sc);
+                        break;
+                    };
 
                     for (int i = 0; i < orga.length; i++) {
                         if (orga[i][1] > 0) {
@@ -114,15 +128,15 @@ public class ElorrietaVending {
                     }
 
                     System.out.println(heading(("Subtotala: " + subtotal), 3, "-"));
-                    System.out.println(heading(("Totala: " + (subtotal * 1.21)), 5, "-"));
+                    System.out.println(heading(("Totala: " + round(subtotal * 1.21, 2)), 5, "-"));
 
                     itxaronEnter(sc);
 
                     break;
                 case 5:
-                    double prezioa = Orga.orgaSubtotal(orga, produktu_prezioak) * 1.21;
+                    double prezioa = round(Orga.orgaSubtotal(orga, produktu_prezioak) * 1.21, 2);
 
-                    double sarrera = lortuDouble(sc, "Sartu dirua makinan", prezioa, 999.0);
+                    double sarrera = round(lortuDouble(sc, "Sartu dirua makinan", prezioa, 999.0), 2);
 
                     double bueltak = sarrera - prezioa;
 
@@ -135,7 +149,7 @@ public class ElorrietaVending {
 
                     for (int i = 0; i < dirua.length; i++) {
                         if (dirua[i] != 0) {
-                            System.out.println(BILLETEAK[i] + "€ x " + dirua[i]);
+                            System.out.println(diruaErakutsi(i) + " x " + dirua[i]);
                         }
                     }
 
@@ -147,6 +161,15 @@ public class ElorrietaVending {
                     System.err.println("Errorea: Aukera 1 baino txikiago edo 6 baino handiagoa da");
                     return;
             }
+        }
+    }
+
+    private static String diruaErakutsi(int billeteak_index) {
+        int dirua = BILLETEAK[billeteak_index];
+        if (dirua > 100) {
+            return (dirua / 100) + "€";
+        } else {
+            return dirua + "cent";
         }
     }
 
@@ -239,6 +262,12 @@ public class ElorrietaVending {
                 sc.next(); // sarrera okerra garbitu
             }
         }
+    }
+
+    static double round(double input, int decimal) { 
+        // input: 2.235
+        double power = Math.pow(10, decimal); // decimal: 2 power: 100
+        return Math.round(input * power) / power; // round(223.5) / 100 = 2.23
     }
 
     static void init_produktuak(String[] mota_izenak, String[] produktu_izenak, double[] produktu_prezioak,

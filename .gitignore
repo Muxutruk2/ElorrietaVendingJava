@@ -1,2 +1,4 @@
 .devenv/
 .devenv.flake.nix
+bin/
+*.class
