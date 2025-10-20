@@ -17,6 +17,9 @@ public class ElorrietaVending {
         int[] produktu_motak = new int[PRODUKTU_KOPURUA];
         int[] produktu_kantitatea = new int[PRODUKTU_KOPURUA];
 
+        String[] erabiltzaileak = { "benat", "bilal", "enay" };
+        String[] pasahitzak = { "benat1234", "bilal07", "enayyy" };
+
         init_produktuak(mota_izenak, produktu_izenak, produktu_prezioak, produktu_motak, produktu_kantitatea);
 
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
@@ -24,7 +27,7 @@ public class ElorrietaVending {
         for (int i = 0; i < orga.length; i++) {
             Arrays.fill(orga[i], -1);
         }
-        while (true) {
+        main_loop: while (true) {
             int organ_kopurua = Orga.organProduktuak(orga);
             System.out.println(heading("Ongi etorri", 5, "-"));
             System.out.println("Organ " + organ_kopurua + " item daude");
@@ -46,47 +49,72 @@ public class ElorrietaVending {
 
                     int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
 
-                    Produktuak.produktuakErakutsiMotak(mota_izenak, aukera_mota, produktu_motak, produktu_kantitatea,
-                            produktu_izenak, produktu_prezioak);
-
-                    int aukera_produktua_0;
-
                     while (true) {
-                        aukera_produktua_0 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
+                        Produktuak.produktuakErakutsiMotak(
+                                mota_izenak, aukera_mota, produktu_motak, produktu_kantitatea,
+                                produktu_izenak, produktu_prezioak);
 
-                        if (produktu_kantitatea[aukera_produktua_0] == 0) {
+                        int aukera_produktua = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
+
+                        if (produktu_kantitatea[aukera_produktua] == 0) {
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
+                            continue;
                         }
 
-                        if (produktu_motak[aukera_produktua_0] != aukera_mota) {
+                        if (produktu_motak[aukera_produktua] != aukera_mota) {
                             System.err.println("Aukeratu duzun produktua ez da aukeratu duzun motaren parte");
-                        } else {
-                            // Aukeratu duen produktua mota zuzena du
+                            continue;
+                        }
+
+                        // Produktua zuzena bada, organ sartu
+                        Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua);
+
+                        // Galdetu zer egin nahi duen orain
+                        System.out.println();
+                        System.out.println("1 Mota berdineko beste produktu bat gehitu");
+                        System.out.println("2 Itzuli menu nagusira");
+
+                        int aukera_menua = lortuInt(sc, "Aukeratu", 1, 2);
+
+                        itxaronEnter(sc);
+
+                        if (aukera_menua == 1) {
+                            // bueltatu while-ra (jarraitu mota bereko beste produktu bat aukeratzen)
+                            continue;
+                        } else if (aukera_menua == 2) {
+                            // zuzenean menu nagusira bueltatu
+                            continue main_loop;
+                        }
+                    }
+                case 2:
+                    while (true) {
+                        Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea, produktu_izenak,
+                                produktu_prezioak);
+
+                        int aukera_produktua_1 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
+
+                        if (produktu_kantitatea[aukera_produktua_1] == 0) {
+                            System.err.println("Aukeratu duzun produktua ez da existitzen");
                             break;
                         }
+
+                        Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua_1);
+
+                        System.out.println("1 Beste produktu bat gehitu");
+                        System.out.println("2 Itzuli menu nagusira");
+
+                        int aukera_menua_0 = lortuInt(sc, "Aukeratu", 1, 2);
+
+                        if (aukera_menua_0 == 1) {
+                            itxaronEnter(sc);
+                            // bueltatu while-ra (jarraitu beste produktu bat aukeratzen)
+                            continue;
+                        } else if (aukera_menua_0 == 2) {
+                            itxaronEnter(sc);
+                            // zuzenean menu nagusira bueltatu
+                            continue main_loop;
+                        }
                     }
-
-                    Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua_0);
-
-                    itxaronEnter(sc);
-
-                    break;
-                case 2:
-                    Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea, produktu_izenak,
-                            produktu_prezioak);
-
-                    int aukera_produktua_1 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
-
-                    if (produktu_kantitatea[aukera_produktua_1] == 0) {
-                        System.err.println("Aukeratu duzun produktua ez da existitzen");
-                        break;
-                    }
-
-                    Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua_1);
-
-                    itxaronEnter(sc);
-
-                    break;
                 case 3:
                     System.out.println("Produktua kendu");
 
@@ -95,7 +123,6 @@ public class ElorrietaVending {
                         itxaronEnter(sc);
                         break;
                     }
-                    ;
 
                     for (int i = 0; i < orga.length; i++) {
                         if (orga[i][1] > 0) {
@@ -151,6 +178,83 @@ public class ElorrietaVending {
 
                     break;
                 case 6:
+                    System.out.println("Idatzi erabiltzailea: ");
+                    String erabiltzailea = sc.nextLine();
+
+                    System.out.println("Idatzi pasahitza: ");
+                    String pasahitza = sc.nextLine();
+
+                    int erabiltzaile_indizea = linearSearch(erabiltzaileak, erabiltzailea);
+
+                    if (erabiltzaile_indizea == -1) {
+                        // Erabiltzailea ez da existitzen
+                        System.err.println("Pasahitz edo erabiltzaile okerra");
+                        continue;
+                    }
+
+                    if (pasahitzak[erabiltzaile_indizea] != pasahitza) {
+                        // Pasahitz okerra
+                        System.err.println("Pasahitz edo erabiltzaile okerra");
+                        continue;
+                    }
+
+                    System.out.println("Ongi etorri " + erabiltzaileak[erabiltzaile_indizea] + "!");
+
+                    System.out.println(heading("ADMIN PANELA", 10, "*"));
+
+                    System.out.println("1 Produktu berria");
+                    System.out.println("2 Produktua aldatu");
+                    System.out.println("3 Produktua ezabatu");
+                    System.out.println("4 Irten");
+
+                    int aukera_admin = lortuInt(sc, "Aukeratu", 1, 4);
+
+                    switch (aukera_admin) {
+                        case 1:
+                            int leku_librea = Produktuak.produktuakLekuLibrea(produktu_kantitatea);
+
+                            if (leku_librea == -1) {
+                                System.err.println("Ez dago lekurik produktu berriak sarzeko");
+                                break;
+                            }
+
+                            System.out.println("Idatzi produktuaren izen berria");
+                            String produktu_izena = sc.nextLine();
+
+                            for (int i = 0; i < MOTA_KOPURUA; i++) {
+                                System.out.println((i + 1) + " - " + mota_izenak[i]);
+                            }
+                            System.out.println("Idatzi produktuaren mota");
+
+                            int produktu_mota = lortuInt(sc, "Idatzi mota", 1, MOTA_KOPURUA) - 1;
+
+                            double produktu_prezioa = lortuDouble(sc, "Idatzi produktuaren prezioa", 0.01, 50.0);
+
+                            int produktu_berria_kantitatea = lortuInt(sc, "Idatzi zenbat produktu dauden", aukera_admin,
+                                    produktu_mota);
+
+                            produktu_izenak[leku_librea] = produktu_izena;
+                            produktu_motak[leku_librea] = produktu_mota;
+                            produktu_kantitatea[leku_librea] = produktu_berria_kantitatea;
+                            produktu_prezioak[leku_librea] = produktu_prezioa;
+
+                            System.out.println("Produktua arrakastaz gehituta");
+
+                            itxaronEnter(sc);
+
+                            break;
+                        case 2:
+
+                            break;
+                        case 3:
+
+                            break;
+                        case 4:
+                            return;
+
+                        default:
+                            break;
+                    }
 
                     break;
                 default:
@@ -264,6 +368,22 @@ public class ElorrietaVending {
         // input: 2.235
         double power = Math.pow(10, decimal); // decimal: 2 power: 100
         return Math.round(input * power) / power; // round(223.5) / 100 = 2.23
+    }
+
+    /**
+     * String array baten bilatu eta indizea bilatu: -1 Bueltatu ez dagoenean
+     * 
+     * @param arr
+     * @param target
+     * @return
+     */
+    public static int linearSearch(String[] arr, String target) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals(target)) {
+                return i; // Aurkitu da
+            }
+        }
+        return -1; // Ez da aurkitu
     }
 
     static void init_produktuak(String[] mota_izenak, String[] produktu_izenak, double[] produktu_prezioak,

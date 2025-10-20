@@ -73,6 +73,15 @@ public class Produktuak {
         }
     }
 
+    public static int produktuakLekuLibrea(int[] produktu_kantitatea) {
+        for (int i = 0; i < produktu_kantitatea.length; i++) {
+            if (produktu_kantitatea[i] == 0) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /**
      * Mota zehatz bateko produktuak (kantitatea > 0 dutenak soilik) erakusten ditu.
      * Aukera 1-eko zati baten antzekoa izan liteke.
