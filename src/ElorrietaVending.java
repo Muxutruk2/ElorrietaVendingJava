@@ -97,7 +97,7 @@ public class ElorrietaVending {
 
                         if (produktu_kantitatea[aukera_produktua_1] == 0) {
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
-                            break;
+                            continue;
                         }
 
                         Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua_1);
@@ -177,16 +177,25 @@ public class ElorrietaVending {
                             System.out.println(diruaErakutsi(i) + " x " + dirua[i]);
                         }
                     }
-
-                    Thread.sleep(5000);
+                    try {
+                        Thread.sleep(5000);
+                    } catch (Exception e) {
+                        // Ezer
+                    }
 
                     break;
                 case 6:
-                    System.out.println("Idatzi erabiltzailea: ");
-                    String erabiltzailea = sc.nextLine();
+                    String erabiltzailea = "";
+                    while (erabiltzailea.isEmpty()) {
+                        System.out.print("Idatzi erabiltzailea: ");
+                        erabiltzailea = sc.nextLine();
+                    }
 
-                    System.out.println("Idatzi pasahitza: ");
-                    String pasahitza = sc.nextLine();
+                    String pasahitza = "";
+                    while (pasahitza.isEmpty()) {
+                        System.out.print("Idatzi pasahitza: ");
+                        pasahitza = sc.nextLine();
+                    }
 
                     int erabiltzaile_indizea = linearSearch(erabiltzaileak, erabiltzailea);
 
@@ -196,7 +205,7 @@ public class ElorrietaVending {
                         continue;
                     }
 
-                    if (pasahitzak[erabiltzaile_indizea] != pasahitza) {
+                    if (!pasahitzak[erabiltzaile_indizea].equals(pasahitza)) {
                         // Pasahitz okerra
                         System.err.println("Pasahitz edo erabiltzaile okerra");
                         continue;
@@ -351,6 +360,7 @@ public class ElorrietaVending {
 
                 // Zenbakia tarte egokian dagoen egiaztatu
                 if (zenb >= min && zenb <= max) {
+                    sc.nextLine(); // garbitu sarrera
                     return zenb; // zuzena bada, bueltatu
                 } else {
                     System.out.println("Mesedez, " + min + " eta " + max + " arteko zenbaki bat sartu.");
