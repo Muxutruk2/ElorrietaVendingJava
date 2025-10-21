@@ -1,4 +1,23 @@
 public class Produktuak {
+    /**
+     * Produktu guztiak erakusten ditu taula formatuan.
+     * Soilik kantitatea > 0 duten produktuak agertzen dira.
+     * Taula honetan honako zutabeak daude:
+     * - IDa: Produktuaren identifikatzailea (index + 1)
+     * - Izena: Produktuaren izena
+     * - Prezioa: Produktuaren prezioa (bi hamartarrekin formateatua)
+     * - Kant.: Produktuaren kantitatea stockean
+     * - Mota: Produktuaren motaren izena
+     * 
+     * Taula modu bisual batean inprimatzen da, soilik '|' eta '-' karaktereak
+     * erabilita.
+     *
+     * @param mota_izenak         Produktu mota bakoitzaren izenak
+     * @param produktu_motak      Produktu bakoitzaren motaren IDa
+     * @param produktu_kantitatea Produktu bakoitzaren stock-a (kantitatea)
+     * @param produktu_izenak     Produktu bakoitzaren izenak
+     * @param produktu_prezioak   Produktu bakoitzaren prezioak
+     */
     public static void produktuakErakutsi(String[] mota_izenak, int[] produktu_motak, int[] produktu_kantitatea,
             String[] produktu_izenak, double[] produktu_prezioak) {
         int PRODUKTU_KOPURUA = produktu_izenak.length;
@@ -73,6 +92,14 @@ public class Produktuak {
         }
     }
 
+    /**
+     * Produktuen array batean lehenengo leku librea bilatzen du.
+     * Leku librea produktua kantitatea 0 duen indexa da.
+     *
+     * @param produktu_kantitatea Produktu bakoitzaren stock-a
+     * @return Lehengo leku librea duen indexa, edo -1 bueltatzen du lekua aurkitu
+     *         ez bada
+     */
     public static int produktuakLekuLibrea(int[] produktu_kantitatea) {
         for (int i = 0; i < produktu_kantitatea.length; i++) {
             if (produktu_kantitatea[i] == 0) {
@@ -83,8 +110,21 @@ public class Produktuak {
     }
 
     /**
-     * Mota zehatz bateko produktuak (kantitatea > 0 dutenak soilik) erakusten ditu.
-     * Aukera 1-eko zati baten antzekoa izan liteke.
+     * Mota zehatz bateko produktuak erakusten ditu taula moduan.
+     * Soilik kantitatea > 0 duten produktuak agertzen dira.
+     * Taula honetan honako zutabeak daude:
+     * - IDa: Produktuaren identifikatzailea (index + 1)
+     * - Izena: Produktuaren izena
+     * - Prezioa: Produktuaren prezioa (bi hamartarrekin formateatua)
+     * - Kant.: Produktuaren kantitatea stockean
+     * - Mota: Produktuaren motaren izena
+     * 
+     * @param mota_izenak         Produktu mota bakoitzaren izenak
+     * @param motaID              Erakutsi nahi den motaren IDa
+     * @param produktu_motak      Produktu bakoitzaren motaren IDa
+     * @param produktu_kantitatea Produktu bakoitzaren stock-a (kantitatea)
+     * @param produktu_izenak     Produktu bakoitzaren izenak
+     * @param produktu_prezioak   Produktu bakoitzaren prezioak
      */
     public static void produktuakErakutsiMotak(String[] mota_izenak, int motaID, int[] produktu_motak,
             int[] produktu_kantitatea,

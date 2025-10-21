@@ -4,8 +4,12 @@ public class Orga {
     /**
      * Organ lehen leku librea. EZ BALDIN BADAGO "-1" BUELTATZEN DU
      * 
+     * Orga bi dimentsioko array bat da, non:
+     * - orga[x][0] = produktuaren IDa
+     * - orga[x][1] = produktuaren kantitatea organ
+     * 
      * @param orga
-     * @return
+     * @return -1 ez bada existitzen, eta bestela indizea
      */
     public static int organLehenLekuLibrea(int[][] orga) {
         for (int i = 0; i < orga.length; i++) {
@@ -17,11 +21,15 @@ public class Orga {
     }
 
     /**
-     * Produktua existitzen bada, orgaren indizea, EZ BALDIN BADAGO "-1" BUELTATZEN
-     * DU
+     * Produktua organ bilatzen du
      * 
-     * @param orga
-     * @return
+     * Orga bi dimentsioko array bat da, non:
+     * - orga[x][0] = produktuaren IDa
+     * - orga[x][1] = produktuaren kantitatea organ
+     * 
+     * @param orga        Erabiltzaileak duen orga
+     * @param produktu_id Produktuaren id-a
+     * @return -1 ez bada existizen, eta bestela orgaren indizea
      */
     public static int organProduktua(int[][] orga, int produktu_id) {
         for (int i = 0; i < orga.length; i++) {
@@ -32,6 +40,19 @@ public class Orga {
         return -1;
     }
 
+    /**
+     * Orgaren elementu guztien prezioak eta kantiateak erabiliz, subtotala
+     * kalkulatu
+     * 
+     * 
+     * Orga bi dimentsioko array bat da, non:
+     * - orga[x][0] = produktuaren IDa
+     * - orga[x][1] = produktuaren kantitatea organ
+     * 
+     * @param orga               Erabiltzaileak duen orga
+     * @param produktuak_prezioa Produktuen prezioa
+     * @return Subtotala
+     */
     public static double orgaSubtotal(int[][] orga, double[] produktuak_prezioa) {
         double subtotal = 0.0;
         for (int i = 0; i < orga.length; i++) {
@@ -43,10 +64,14 @@ public class Orga {
     }
 
     /**
-     * Organ dauden produktu desberdin desberdinak bueltatzen ditu
+     * Organ dauden produktu desberdinak bueltatzen ditu
      * 
-     * @param orga
-     * @return
+     * Orga bi dimentsioko array bat da, non:
+     * - orga[x][0] = produktuaren IDa
+     * - orga[x][1] = produktuaren kantitatea organ
+     * 
+     * @param orga Erabiltzailearen orga
+     * @return Produktu desberdinen kantitatea
      */
     public static int organProduktuak(int[][] orga) {
         int count = 0;
@@ -59,20 +84,44 @@ public class Orga {
     }
 
     /**
-     * Organ produktu zehatz baten lehenego
+     * Produktu bat sartu edo eguneratu orga batean.
      * 
-     * @param orga
-     * @return
+     * Orga bi dimentsioko array bat da, non:
+     * - orga[x][0] = produktuaren IDa
+     * - orga[x][1] = produktuaren kantitatea organ
+     * 
+     * Funtzio honek honako prozesua egiten du:
+     * 1. Aukeratutako produktua existitzen dela egiaztatzen du produktu_kantitatea
+     * array-an.
+     * 2. Produktua dagoen ala ez organ egiaztatzen du Orga.organProduktua
+     * metodoaren bidez.
+     * 3. Produktuaren gehieneko kantitatea kalkulatzen du.
+     * 4. Kantitatea erabiltzailearen sarreraren arabera ezartzen du:
+     * - Gehieneko kantitatea 1 bada, automatikoki ezartzen da 1 edo 0, produktua
+     * dagoen ala ez kontuan hartuta.
+     * - Ale bat baino gehiago bada, erabiltzaileari galdetzen zaio kantitatea
+     * sartzeko.
+     * 5. Kantitatea 0 bada:
+     * - Produktua orgatik kendu egiten da (bada badago).
+     * 6. Kantitatea > 0 bada:
+     * - Produktua jada organ badago, kantitatea eguneratzen da.
+     * - Produktua organ ez badago, lehen leku librean gehitzen da.
+     * 
+     * Erroreak:
+     * - Aukeratutako produktua ez badago existitzen, mezua pantailaratzen da eta
+     * funtzioa amaitzen da.
+     * - Produktua organ sartzeko lekurik ez badago, errore mezua pantailaratzen da.
+     * - Produktuaren kantitatea 0 edo gutxiago bada, mezua pantailaratzen da.
+     * 
+     * @param orga                Bi dimentsioko array-a, orgako produktuak
+     *                            gordetzen dituena.
+     * @param sc                  Scanner objektua, erabiltzailearen sarrera
+     *                            jasotzeko.
+     * @param produktu_kantitatea Array bat, non produktu bakoitzaren stock-a
+     *                            gordetzen den.
+     * @param aukera_produktua_0  Gehitu edo eguneratu nahi den produktuaren IDa
+     *                            (indexa produktu_kantitatea array-an).
      */
-    public static int organLehenProduktua(int[][] orga) {
-        for (int i = 0; i < orga.length; i++) {
-            if (orga[i][1] == 0) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     public static void sartuProduktuaOrgan(int[][] orga, Scanner sc, int[] produktu_kantitatea,
             int aukera_produktua_0) {
 

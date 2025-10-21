@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class ElorrietaVending {
 
     static int PRODUKTU_KOPURUA = 40;
-    static int MOTA_KOPURUA = 3;
+    static int MOTA_KOPURUA = 4;
     static int[] BILLETEAK = { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000 };
 
     public static void main(String[] args) throws Exception {
@@ -24,9 +24,11 @@ public class ElorrietaVending {
 
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
 
+        // Bete orga -1
         for (int i = 0; i < orga.length; i++) {
             Arrays.fill(orga[i], -1);
         }
+
         main_loop: while (true) {
             int organ_kopurua = Orga.organProduktuak(orga);
             System.out.println(heading("Ongi etorri", 5, "-"));
@@ -176,6 +178,8 @@ public class ElorrietaVending {
                         }
                     }
 
+                    Thread.sleep(5000);
+
                     break;
                 case 6:
                     System.out.println("Idatzi erabiltzailea: ");
@@ -264,6 +268,12 @@ public class ElorrietaVending {
         }
     }
 
+    /**
+     * Dirua formatu zuzenean erakutsi
+     * 
+     * @param billeteak_index BILLETEAK arrayaen indizea (0: 1cent, 1: 2cent...)
+     * @return Textuan txanpon/billete horren errepresentazioa
+     */
     private static String diruaErakutsi(int billeteak_index) {
         int dirua = BILLETEAK[billeteak_index];
         if (dirua > 100) {
@@ -295,6 +305,11 @@ public class ElorrietaVending {
         return emaitza;
     }
 
+    /**
+     * "..." erakutsi erabiltzaileari eta harek enter sakatu arte itxaron
+     * 
+     * @param sc Scanner instantzia
+     */
     private static void itxaronEnter(Scanner sc) {
         String input;
         do {
@@ -305,11 +320,13 @@ public class ElorrietaVending {
 
     }
 
-    /*
+    /**
+     * Textua titulo modura bueltatu "--- Adibidea ---"
      * 
-     * @param karakterea
-     * 
-     * @return
+     * @param input      erabiliko den textua
+     * @param kopurua    zenbak karaktere sartuko zaion ezker eta eskuinean
+     * @param karakterea zer karakter (multzo) sartuko zaion
+     * @return Textua
      */
     static String heading(String input, int kopurua, String karakterea) {
         return karakterea.repeat(kopurua) + " " + input + " " + karakterea.repeat(kopurua);
@@ -317,6 +334,12 @@ public class ElorrietaVending {
 
     /**
      * Erabiltzaileari galdetu zenbaki bat min eta max artean (biak barne)
+     * 
+     * @param sc     Scanner instantzia
+     * @param prompt Zer galdetuko zaion
+     * @param min    Zenbaki minimoa
+     * @param max    Zenbaki maximoa
+     * @return Zenbaki osoa, min eta max artean (biak barne)
      */
     static int lortuInt(Scanner sc, String prompt, int min, int max) {
         while (true) {
@@ -340,8 +363,13 @@ public class ElorrietaVending {
     }
 
     /**
-     * Erabiltzaileari galdetu zenbaki bat (double motakoa) min eta max artean (biak
-     * barne)
+     * Erabiltzaileari galdetu zenbaki (dobule) bat min eta max artean (biak barne)
+     * 
+     * @param sc     Scanner instantzia
+     * @param prompt Zer galdetuko zaion
+     * @param min    Zenbaki minimoa
+     * @param max    Zenbaki maximoa
+     * @return Zenbakia, min eta max artean (biak barne)
      */
     static double lortuDouble(Scanner sc, String prompt, double min, double max) {
         while (true) {
@@ -364,6 +392,13 @@ public class ElorrietaVending {
         }
     }
 
+    /**
+     * Double zenbaki bat borobildu
+     * 
+     * @param input   Zenbaki double-a
+     * @param decimal Zenbat leku dezimalera
+     * @return Zenbaki borobildua
+     */
     static double round(double input, int decimal) {
         // input: 2.235
         double power = Math.pow(10, decimal); // decimal: 2 power: 100
@@ -371,11 +406,13 @@ public class ElorrietaVending {
     }
 
     /**
-     * String array baten bilatu eta indizea bilatu: -1 Bueltatu ez dagoenean
+     * String array batean, String bat bilatu eta indizea bueltatu
      * 
-     * @param arr
-     * @param target
-     * @return
+     * -1 bueltatzen du ez dagoenean
+     * 
+     * @param arr    Bilatzeko array-a
+     * @param target Bilatu nahi den textua
+     * @return Non aurkitzen den (indizea); -1 Ez bada topatu
      */
     public static int linearSearch(String[] arr, String target) {
         for (int i = 0; i < arr.length; i++) {
@@ -386,11 +423,22 @@ public class ElorrietaVending {
         return -1; // Ez da aurkitu
     }
 
+    /**
+     * Produktuen array guztiak mutatu hasieratzeko
+     * 
+     * @param mota_izenak
+     * @param produktu_izenak
+     * @param produktu_prezioak
+     * @param produktu_motak
+     * @param produktu_kantitatea
+     * 
+     */
     static void init_produktuak(String[] mota_izenak, String[] produktu_izenak, double[] produktu_prezioak,
             int[] produktu_motak, int[] produktu_kantitatea) {
         mota_izenak[0] = "edariak";
         mota_izenak[1] = "snack";
         mota_izenak[2] = "osasuntsuak";
+        mota_izenak[3] = "teknologia";
 
         produktu_izenak[0] = "FritzCola Lata";
         produktu_prezioak[0] = 1.50;
