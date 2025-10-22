@@ -200,4 +200,32 @@ public class Produktuak {
             }
         }
     }
+
+    /**
+     * Orgaren arabera, produktu_kantitatetik kendu erosi diren produktuak
+     * 
+     * @param orga
+     * @param produktu_kantitatea
+     */
+    public static void produktuakErosiOrgatik(int[][] orga, int[] produktu_kantitatea) {
+        for (int i = 0; i < orga.length; i++) {
+            int orga_prod_id = orga[i][0];
+            int orga_prod_kopurua = orga[i][1];
+
+            if (orga_prod_kopurua <= 0) {
+                continue;
+            }
+
+            if (orga_prod_kopurua > produktu_kantitatea[orga_prod_id]) {
+                System.err.println("Organ dagoen kantitatea produktuaren lekuan dagoen kantitatea baino handiagoa da");
+                System.err.println("Orga id: " + i);
+                System.err.println("Produktu id: " + orga_prod_id);
+                System.err.println("Orga Produktu kop.: " + orga_prod_kopurua);
+                System.err.println("Produktu kop.: " + produktu_kantitatea[orga_prod_id]);
+                continue;
+            }
+
+            produktu_kantitatea[orga_prod_id] -= orga_prod_kopurua;
+        }
+    }
 }

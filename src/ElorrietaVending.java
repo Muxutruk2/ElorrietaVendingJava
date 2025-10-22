@@ -177,6 +177,13 @@ public class ElorrietaVending {
                             System.out.println(diruaErakutsi(i) + " x " + dirua[i]);
                         }
                     }
+
+                    Produktuak.produktuakErosiOrgatik(orga, produktu_kantitatea);
+
+                    for (int i = 0; i < orga.length; i++) {
+                        orga[i] = new int[] { -1, -1 }; // Orga hutsitu
+                    }
+
                     try {
                         Thread.sleep(5000);
                     } catch (Exception e) {
