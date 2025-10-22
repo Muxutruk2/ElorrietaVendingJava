@@ -2,14 +2,18 @@ import java.util.Scanner;
 
 public class Orga {
     /**
-     * Organ lehen leku librea. EZ BALDIN BADAGO "-1" BUELTATZEN DU
-     * 
-     * Orga bi dimentsioko array bat da, non:
-     * - orga[x][0] = produktuaren IDa
-     * - orga[x][1] = produktuaren kantitatea organ
-     * 
-     * @param orga
-     * @return -1 ez bada existitzen, eta bestela indizea
+     * Erosketa-orgaren laburpena kontsolan erakusten du.
+     * Taula batean IDa, izena, kantitatea, prezioa eta guztizkoa bistaratzen dira.
+     *
+     * Orga parametroaren egitura:
+     * - orga[x][0] → produktuaren IDa
+     * - orga[x][1] → produktuaren kantitatea orgakoan
+     *
+     * @param orga                Erabiltzailearen orga
+     * @param produktu_izenak     produktu guztien izenak
+     * @param produktu_kantitatea produktu bakoitzaren eskura dagoen kantitatea
+     * @param produktu_prezioak   produktu bakoitzaren prezio unitarioa
+     * @return Lehen leku librearen indizea
      */
     public static int organLehenLekuLibrea(int[][] orga) {
         for (int i = 0; i < orga.length; i++) {

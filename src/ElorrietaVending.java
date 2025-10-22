@@ -10,6 +10,7 @@ public class ElorrietaVending {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
 
+        // Moten izenak gorde {0: "edariak", 1: "snack"}
         String[] mota_izenak = new String[MOTA_KOPURUA];
 
         String[] produktu_izenak = new String[PRODUKTU_KOPURUA];
@@ -20,11 +21,12 @@ public class ElorrietaVending {
         String[] erabiltzaileak = { "benat", "bilal", "enay" };
         String[] pasahitzak = { "benat1234", "bilal07", "enayyy" };
 
+        // Hasieratu arrayak
         init_produktuak(mota_izenak, produktu_izenak, produktu_prezioak, produktu_motak, produktu_kantitatea);
 
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
 
-        // Bete orga -1
+        // Bete orga -1 zenbakiekin
         for (int i = 0; i < orga.length; i++) {
             Arrays.fill(orga[i], -1);
         }
@@ -50,6 +52,16 @@ public class ElorrietaVending {
                     }
 
                     int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
+
+                    int motako_produktu_kop = Produktuak.produktuKopuruaMota(produktu_kantitatea, produktu_motak,
+                            aukera_mota);
+
+                    if (motako_produktu_kop == 0) {
+                        System.err.println("Emandako motan ez daude aukeratu ahal diren produkturik!");
+                        System.err.println("Saiatu beste mota batekin");
+                        itxaronEnter(sc);
+                        continue main_loop;
+                    }
 
                     while (true) {
                         Produktuak.produktuakErakutsiMotak(
@@ -90,6 +102,14 @@ public class ElorrietaVending {
                     }
                 case 2:
                     while (true) {
+                        int produktuak_kopurua = Produktuak.produktuKopurua(produktu_kantitatea);
+
+                        if (produktuak_kopurua == 0) {
+                            System.err.println("Ez dago produkturik makinan!");
+                            System.err.println("Deitu arreta zerbitzura, barkatu eragozpenak");
+                            continue main_loop;
+                        }
+
                         Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea, produktu_izenak,
                                 produktu_prezioak);
 
@@ -192,6 +212,10 @@ public class ElorrietaVending {
 
                     break;
                 case 6:
+                    if (sc.hasNextLine()) {
+                        sc.nextLine();
+                    }
+
                     String erabiltzailea = "";
                     while (erabiltzailea.isEmpty()) {
                         System.out.print("Idatzi erabiltzailea: ");
@@ -229,6 +253,10 @@ public class ElorrietaVending {
 
                     int aukera_admin = lortuInt(sc, "Aukeratu", 1, 4);
 
+                    if (sc.hasNextLine()) {
+                        sc.nextLine();
+                    }
+
                     switch (aukera_admin) {
                         case 1:
                             int leku_librea = Produktuak.produktuakLekuLibrea(produktu_kantitatea);
@@ -248,7 +276,7 @@ public class ElorrietaVending {
 
                             int produktu_mota = lortuInt(sc, "Idatzi mota", 1, MOTA_KOPURUA) - 1;
 
-                            double produktu_prezioa = lortuDouble(sc, "Idatzi produktuaren prezioa", 0.01, 50.0);
+                            double produktu_prezioa = lortuDouble(sc, "Idatzi produktuaren prezioa", 0.01, 99.9);
 
                             int produktu_berria_kantitatea = lortuInt(sc, "Idatzi zenbat produktu dauden", aukera_admin,
                                     produktu_mota);
@@ -264,22 +292,81 @@ public class ElorrietaVending {
 
                             break;
                         case 2:
+                            while (true) {
+                                Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea,
+                                        produktu_izenak, produktu_prezioak);
+
+                                int aldatzeko_produktu_id = lortuInt(sc, "Aukeratu aldatzeko produktua", 1,
+                                        PRODUKTU_KOPURUA) - 1;
+
+                                if (produktu_kantitatea[aldatzeko_produktu_id] <= 0) {
+                                    System.err.println("Aukeratu duzun produktua ez da existitzen");
+                                    continue;
+                                }
+
+                                System.out.println("Izena: " + produktu_izenak[aldatzeko_produktu_id]);
+                                System.out.println("Prezioa: " + produktu_prezioak[aldatzeko_produktu_id]);
+                                System.out.println("Mota: " + mota_izenak[produktu_motak[aldatzeko_produktu_id]] + " ("
+                                        + produktu_motak[aldatzeko_produktu_id] + ")");
+                                System.out.println("Kantitatea" + produktu_kantitatea[aldatzeko_produktu_id]);
+
+                                String aldatzeko_izena = "";
+                                while (aldatzeko_izena.isEmpty()) {
+                                    System.out.print("Idatzi izen berria: ");
+                                    aldatzeko_izena = sc.nextLine();
+                                }
+
+                                double aldatzeko_prezioa = lortuDouble(sc, "Idatzi prezio berria", 0.01, 99.9);
+
+                                System.out.println("Produktu Motak: ");
+                                for (int i = 0; i < mota_izenak.length; i++) {
+                                    System.out.println((i + 1) + " - " + mota_izenak[i]);
+                                }
+
+                                int aldatzeko_mota = lortuInt(sc, "Idatzi mota berria", 1, mota_izenak.length) - 1;
+
+                                int aldatzeko_kantitatea = lortuInt(sc, "Idatzi kantitate berria", 0, 10);
+
+                                produktu_izenak[aldatzeko_produktu_id] = aldatzeko_izena;
+                                produktu_prezioak[aldatzeko_produktu_id] = aldatzeko_prezioa;
+                                produktu_motak[aldatzeko_produktu_id] = aldatzeko_mota;
+                                produktu_kantitatea[aldatzeko_produktu_id] = aldatzeko_kantitatea;
+
+                                System.out.println("Produktua arrakastaz aldatuta");
+
+                                break;
+                            }
 
                             break;
                         case 3:
+                            while (true) {
+                                Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea,
+                                        produktu_izenak, produktu_prezioak);
 
+                                int ezabatzeko_produktua = lortuInt(sc, "Idatzi ezabazeko produktua", 1,
+                                        PRODUKTU_KOPURUA)
+                                        - 1;
+
+                                if (produktu_kantitatea[ezabatzeko_produktua] <= 0) {
+                                    System.err.println("Produktu hori ez da existitzen");
+                                    continue;
+                                }
+
+                                produktu_kantitatea[ezabatzeko_produktua] = 0;
+
+                                break;
+                            }
                             break;
-                        case 4:
-                            return;
 
                         default:
-                            break;
+                            continue main_loop;
                     }
 
                     break;
                 default:
                     System.err.println("Errorea: Aukera 1 baino txikiago edo 6 baino handiagoa da");
                     return;
+
             }
         }
     }
@@ -367,7 +454,6 @@ public class ElorrietaVending {
 
                 // Zenbakia tarte egokian dagoen egiaztatu
                 if (zenb >= min && zenb <= max) {
-                    sc.nextLine(); // garbitu sarrera
                     return zenb; // zuzena bada, bueltatu
                 } else {
                     System.out.println("Mesedez, " + min + " eta " + max + " arteko zenbaki bat sartu.");

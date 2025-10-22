@@ -202,10 +202,48 @@ public class Produktuak {
     }
 
     /**
+     * Zenbat produktu existitzen diren makinan
+     * 
+     * @param produktu_kantitatea Produktuen kantitatearen arraya
+     * @return Produktu kopurua
+     */
+    public static int produktuKopurua(int[] produktu_kantitatea) {
+        int count = 0;
+        for (int i = 0; i < produktu_kantitatea.length; i++) {
+            if (produktu_kantitatea[i] > 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Zenbat produktu existitzen diren makinan, produktu zehatz batekin
+     * 
+     * @param produktu_kantitatea Produktuen kantitatearen arraya
+     * @param produktu_motak      Produktuen moten arraya
+     * @param mota                Zer mota
+     * @return Produktu kopurua
+     */
+    public static int produktuKopuruaMota(int[] produktu_kantitatea, int[] produktu_motak, int mota) {
+        int count = 0;
+        for (int i = 0; i < produktu_kantitatea.length; i++) {
+            if (produktu_kantitatea[i] > 0 && produktu_motak[i] == mota) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
      * Orgaren arabera, produktu_kantitatetik kendu erosi diren produktuak
      * 
-     * @param orga
-     * @param produktu_kantitatea
+     * Orga bi dimentsioko array bat da, non:
+     * - orga[x][0] = produktuaren IDa
+     * - orga[x][1] = produktuaren kantitatea organ
+     * 
+     * @param orga                Erabiltzailearen orga
+     * @param produktu_kantitatea Produktuen kantitateen arraya
      */
     public static void produktuakErosiOrgatik(int[][] orga, int[] produktu_kantitatea) {
         for (int i = 0; i < orga.length; i++) {

@@ -1,5 +1,11 @@
 public class Laburpena {
-
+    /**
+     * 
+     * @param orga
+     * @param produktu_izenak
+     * @param produktu_kantitatea
+     * @param produktu_prezioak
+     */
     public static void laburpena(int[][] orga, String[] produktu_izenak, int[] produktu_kantitatea,
             double[] produktu_prezioak) {
 
