@@ -538,34 +538,135 @@ public class ElorrietaVending {
      */
     static void init_produktuak(String[] mota_izenak, String[] produktu_izenak, double[] produktu_prezioak,
             int[] produktu_motak, int[] produktu_kantitatea) {
-        mota_izenak[0] = "edariak";
-        mota_izenak[1] = "snack";
-        mota_izenak[2] = "osasuntsuak";
-        mota_izenak[3] = "teknologia";
 
-        produktu_izenak[0] = "FritzCola Lata";
+        // Produktu motak
+        mota_izenak[0] = "Edariak";
+        mota_izenak[1] = "Snack-ak";
+        mota_izenak[2] = "Osasungarriak";
+        mota_izenak[3] = "Teknologia";
+
+        // Edariak
+        produktu_izenak[0] = "FritzKola";
         produktu_prezioak[0] = 1.50;
         produktu_motak[0] = 0;
-        produktu_kantitatea[0] = 2;
+        produktu_kantitatea[0] = 3;
 
-        produktu_izenak[1] = "Altzola Ura 50cl";
+        produktu_izenak[1] = "Aqua Pura 50cl";
         produktu_prezioak[1] = 1.00;
         produktu_motak[1] = 0;
-        produktu_kantitatea[1] = 1;
+        produktu_kantitatea[1] = 2;
 
-        produktu_izenak[2] = "Patata Frijituak";
-        produktu_prezioak[2] = 1.20;
-        produktu_motak[2] = 1;
-        produktu_kantitatea[2] = 3;
+        produktu_izenak[2] = "Kafe hotza";
+        produktu_prezioak[2] = 0.80;
+        produktu_motak[2] = 0;
+        produktu_kantitatea[2] = 4;
 
-        produktu_izenak[3] = "Fruta";
-        produktu_prezioak[3] = 2.00;
-        produktu_motak[3] = 2;
-        produktu_kantitatea[3] = 1;
+        produktu_izenak[3] = "Edari Isotonikoa";
+        produktu_prezioak[3] = 1.60;
+        produktu_motak[3] = 0;
+        produktu_kantitatea[3] = 2;
 
-        produktu_izenak[4] = "Laranja Zukua 20cl";
-        produktu_prezioak[4] = 1.30;
-        produktu_motak[4] = 2;
-        produktu_kantitatea[4] = 2;
+        produktu_izenak[4] = "Te hotz errefreskantea";
+        produktu_prezioak[4] = 1.60;
+        produktu_motak[4] = 0;
+        produktu_kantitatea[4] = 5;
+
+        produktu_izenak[5] = "Root Beer Garagardoa";
+        produktu_prezioak[5] = 1.20;
+        produktu_motak[5] = 0;
+        produktu_kantitatea[5] = 3;
+
+        // Snack-ak
+        produktu_izenak[6] = "Patata Frijituak";
+        produktu_prezioak[6] = 1.20;
+        produktu_motak[6] = 1;
+        produktu_kantitatea[6] = 4;
+
+        produktu_izenak[7] = "Gaileta gaziak";
+        produktu_prezioak[7] = 0.80;
+        produktu_motak[7] = 1;
+        produktu_kantitatea[7] = 3;
+
+        produktu_izenak[8] = "Choco Wafer Txokolatina";
+        produktu_prezioak[8] = 1.20;
+        produktu_motak[8] = 1;
+        produktu_kantitatea[8] = 5;
+
+        produktu_izenak[9] = "Negritos ";
+        produktu_prezioak[9] = 0.80;
+        produktu_motak[9] = 1;
+        produktu_kantitatea[9] = 2;
+
+        produktu_izenak[10] = "Txokolatezko gailetak";
+        produktu_prezioak[10] = 1.20;
+        produktu_motak[10] = 1;
+        produktu_kantitatea[10] = 3;
+
+        produktu_izenak[11] = "Patata kurruskagarriak";
+        produktu_prezioak[11] = 1.80;
+        produktu_motak[11] = 1;
+        produktu_kantitatea[11] = 4;
+
+        // Osasungarriak
+        produktu_izenak[12] = "Laranja Zukua 20cl";
+        produktu_prezioak[12] = 1.30;
+        produktu_motak[12] = 2;
+        produktu_kantitatea[12] = 3;
+
+        produktu_izenak[13] = "Sagarra";
+        produktu_prezioak[13] = 0.60;
+        produktu_motak[13] = 2;
+        produktu_kantitatea[13] = 2;
+
+        produktu_izenak[14] = "Ezpeltazko barritak";
+        produktu_prezioak[14] = 0.80;
+        produktu_motak[14] = 2;
+        produktu_kantitatea[14] = 4;
+
+        produktu_izenak[15] = "Brokoli freskoa";
+        produktu_prezioak[15] = 1.00;
+        produktu_motak[15] = 2;
+        produktu_kantitatea[15] = 2;
+
+        produktu_izenak[16] = "Fruitu lehorrak";
+        produktu_prezioak[16] = 0.60;
+        produktu_motak[16] = 2;
+        produktu_kantitatea[16] = 3;
+
+        produktu_izenak[17] = "Pepinoa";
+        produktu_prezioak[17] = 1.00;
+        produktu_motak[17] = 2;
+        produktu_kantitatea[17] = 2;
+
+        // Teknologia
+        produktu_izenak[18] = "Aurikular Inalambrikoak";
+        produktu_prezioak[18] = 15.00;
+        produktu_motak[18] = 3;
+        produktu_kantitatea[18] = 2;
+
+        produktu_izenak[19] = "Bateria Eramangarria";
+        produktu_prezioak[19] = 10.00;
+        produktu_motak[19] = 3;
+        produktu_kantitatea[19] = 3;
+
+        produktu_izenak[20] = "Kargadorea";
+        produktu_prezioak[20] = 12.50;
+        produktu_motak[20] = 3;
+        produktu_kantitatea[20] = 4;
+
+        produktu_izenak[21] = "Aurikularrak (Mini-Jack)";
+        produktu_prezioak[21] = 8.00;
+        produktu_motak[21] = 3;
+        produktu_kantitatea[21] = 2;
+
+        produktu_izenak[22] = "Aurikularrak (USB-C)";
+        produktu_prezioak[22] = 8.00;
+        produktu_motak[22] = 3;
+        produktu_kantitatea[22] = 3;
+
+        produktu_izenak[23] = "USB-C Kablea";
+        produktu_prezioak[23] = 5.00;
+        produktu_motak[23] = 3;
+        produktu_kantitatea[23] = 2;
     }
 }
