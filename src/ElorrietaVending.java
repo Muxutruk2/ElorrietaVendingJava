@@ -2,36 +2,51 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class ElorrietaVending {
-
     static int PRODUKTU_KOPURUA = 40;
     static int MOTA_KOPURUA = 4;
     static int[] BILLETEAK = { 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000 };
 
     public static void main(String[] args) throws Exception {
+        // Scanner sortu
         Scanner sc = new Scanner(System.in);
 
-        // Moten izenak gorde {0: "edariak", 1: "snack"}
+        // Moten izenak gorde {0: "edariak", 1: "snack", ...}
         String[] mota_izenak = new String[MOTA_KOPURUA];
 
+        // Produktuen izenak {0: "FritzKola", 1: "Aqua Pura", ...}
         String[] produktu_izenak = new String[PRODUKTU_KOPURUA];
+
+        // Produktuen prezioak {0: 1.50, 1: 1.00, ... }
         double[] produktu_prezioak = new double[PRODUKTU_KOPURUA];
+
+        // Produtuen mota {0: 0, 1: 0, ...} // Biak edariak
         int[] produktu_motak = new int[PRODUKTU_KOPURUA];
+
+        // Zenbat ale dauden makinan {0: 3, 1: 2}
         int[] produktu_kantitatea = new int[PRODUKTU_KOPURUA];
 
+        // Administratzarien logina
         String[] erabiltzaileak = { "benat", "bilal", "enay" };
         String[] pasahitzak = { "benat1234", "bilal07", "enayyy" };
 
         // Hasieratu arrayak
         init_produktuak(mota_izenak, produktu_izenak, produktu_prezioak, produktu_motak, produktu_kantitatea);
 
+        // {
+        // 0: {0, 2}, // Bi fritzkola
+        // 1: {-1, -1}, // Leku librea
+        // ...
+        // }
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
 
-        // Bete orga -1 zenbakiekin
+        // Bete orga -1 zenbakiekin (leku librea)
         for (int i = 0; i < orga.length; i++) {
             Arrays.fill(orga[i], -1);
         }
 
+        // Aplikazioaren hasiera
         main_loop: while (true) {
+            // Menu nagusia
             int organ_kopurua = Orga.organProduktuak(orga);
             System.out.println(heading("Ongi etorri", 5, "-"));
             System.out.println("Organ " + organ_kopurua + " item daude");
@@ -42,6 +57,8 @@ public class ElorrietaVending {
             System.out.println("5 Erosketa");
             System.out.println("6 Admin panela");
 
+            // lortuInt zenbaki oso bat erakusten dio erabiltzaileari, min eta max artean
+            // (biak barne)
             int aukera = lortuInt(sc, "Aukeratu", 1, 6);
 
             switch (aukera) {
@@ -53,10 +70,12 @@ public class ElorrietaVending {
 
                     int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
 
+                    // Lortu zenbat produktu dauden erabiltzaileak aukeratu duen motakoak
                     int motako_produktu_kop = Produktuak.produktuKopuruaMota(produktu_kantitatea, produktu_motak,
                             aukera_mota);
 
                     if (motako_produktu_kop == 0) {
+                        // Aukeratutako mota ez du produkturik
                         System.err.println("Emandako motan ez daude aukeratu ahal diren produkturik!");
                         System.err.println("Saiatu beste mota batekin");
                         itxaronEnter(sc);
@@ -71,13 +90,14 @@ public class ElorrietaVending {
                         int aukera_produktua = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
 
                         if (produktu_kantitatea[aukera_produktua] == 0) {
+                            // Aukeratu duen produktua
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
-                            continue;
+                            continue; // Berriro erakutsi produktuak
                         }
 
                         if (produktu_motak[aukera_produktua] != aukera_mota) {
                             System.err.println("Aukeratu duzun produktua ez da aukeratu duzun motaren parte");
-                            continue;
+                            continue; // Berriro erakutsi produktuak
                         }
 
                         // Produktua zuzena bada, organ sartu
@@ -89,8 +109,6 @@ public class ElorrietaVending {
                         System.out.println("2 Itzuli menu nagusira");
 
                         int aukera_menua = lortuInt(sc, "Aukeratu", 1, 2);
-
-                        itxaronEnter(sc);
 
                         if (aukera_menua == 1) {
                             // bueltatu while-ra (jarraitu mota bereko beste produktu bat aukeratzen)
