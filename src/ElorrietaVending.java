@@ -23,7 +23,10 @@ public class ElorrietaVending {
         int[] produktu_motak = new int[PRODUKTU_KOPURUA];
 
         // Zenbat ale dauden makinan {0: 3, 1: 2}
+        // 0: produktua existitzen da baina makina honek ez ditu alerik
+        // -1: produktua ez da existitzen
         int[] produktu_kantitatea = new int[PRODUKTU_KOPURUA];
+        Arrays.fill(produktu_kantitatea, -1); // -1 ekin bete
 
         // Administratzarien logina
         String[] erabiltzaileak = { "benat", "bilal", "enay" };
@@ -199,9 +202,16 @@ public class ElorrietaVending {
                 case 5:
                     double prezioa = round(Orga.orgaSubtotal(orga, produktu_prezioak) * 1.21, 2);
 
-                    double sarrera = round(lortuDouble(sc, "Sartu dirua makinan", prezioa, 999.0), 2);
+                    System.out.println(heading("Guztira " + prezioa, 5, "-"));
 
-                    double bueltak = sarrera - prezioa;
+                    double emandakoa = 0.0;
+
+                    while (emandakoa < prezioa) {
+                        System.out.println(round(prezioa - emandakoa, 2) + " Falta zaizu");
+                        emandakoa += round(lortuDouble(sc, "Sartu dirua makinan", 0.01, 999.0), 2);
+                    }
+
+                    double bueltak = emandakoa - prezioa;
 
                     if (bueltak < 0) {
                         System.err.println("Errorea: Ez da diru nahiko sartu");
@@ -222,8 +232,11 @@ public class ElorrietaVending {
                         orga[i] = new int[] { -1, -1 }; // Orga hutsitu
                     }
 
+                    System.out.println(heading("Eskerrik asko Clankergan konfidatzearren! :D", 10, "-"));
+
                     try {
                         Thread.sleep(5000);
+                        cls();
                     } catch (Exception e) {
                         // Ezer
                     }
@@ -260,6 +273,12 @@ public class ElorrietaVending {
                         continue;
                     }
 
+                    int stock_gabe_kop = Produktuak.produktuKopuruaStockGabe(produktu_kantitatea);
+
+                    if (stock_gabe_kop > 0) {
+                        System.err.println(heading("ADI! " + stock_gabe_kop + " produktu daude stock gabe!", 10, "-"));
+                    }
+
                     System.out.println("Ongi etorri " + erabiltzaileak[erabiltzaile_indizea] + "!");
 
                     System.out.println(heading("ADMIN PANELA", 10, "*"));
@@ -267,7 +286,8 @@ public class ElorrietaVending {
                     System.out.println("1 Produktu berria");
                     System.out.println("2 Produktua aldatu");
                     System.out.println("3 Produktua ezabatu");
-                    System.out.println("4 Irten");
+                    System.out.println("4 Restock");
+                    System.out.println("5 Irten");
 
                     int aukera_admin = lortuInt(sc, "Aukeratu", 1, 4);
 
@@ -296,8 +316,8 @@ public class ElorrietaVending {
 
                             double produktu_prezioa = lortuDouble(sc, "Idatzi produktuaren prezioa", 0.01, 99.9);
 
-                            int produktu_berria_kantitatea = lortuInt(sc, "Idatzi zenbat produktu dauden", aukera_admin,
-                                    produktu_mota);
+                            int produktu_berria_kantitatea = lortuInt(sc, "Idatzi zenbat produktu dauden", 1,
+                                    10);
 
                             produktu_izenak[leku_librea] = produktu_izena;
                             produktu_motak[leku_librea] = produktu_mota;
@@ -376,6 +396,46 @@ public class ElorrietaVending {
                             }
                             break;
 
+                        case 4:
+                            int restock_prod = -1;
+                            while (true) {
+                                stock_gabe_kop = Produktuak.produktuKopuruaStockGabe(produktu_kantitatea);
+
+                                if (stock_gabe_kop <= 0) {
+                                    System.err.println("Ez daude produkturik restock egiteko");
+                                    itxaronEnter(sc);
+                                    break;
+                                }
+
+                                Produktuak.produktuakErakutsiAgortuak(mota_izenak, produktu_motak, produktu_kantitatea,
+                                        produktu_izenak, produktu_prezioak);
+
+                                restock_prod = lortuInt(sc, "Aukeratu restock egiteko produktua", 0, PRODUKTU_KOPURUA)
+                                        - 1;
+
+                                if (produktu_kantitatea[restock_prod] != 0) {
+                                    System.err.println("Produktu hori ez du restock egin behar");
+                                } else {
+                                    int restock_kant = lortuInt(sc, "Zenbat produktu sartuko dira?", 1, 10);
+
+                                    produktu_kantitatea[restock_prod] = restock_kant;
+                                    System.out.println("Produktua arrakastaz gehituta");
+
+                                    itxaronEnter(sc);
+
+                                    System.out.println("1 Beste produktu bati restock egin");
+                                    System.out.println("2 Itzuli admin menura");
+
+                                    int aukera_restock = lortuInt(sc, "Aukeratu", 1, 2);
+
+                                    if (aukera_restock == 2) {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            break;
+
                         default:
                             continue main_loop;
                     }
@@ -397,7 +457,7 @@ public class ElorrietaVending {
      */
     private static String diruaErakutsi(int billeteak_index) {
         int dirua = BILLETEAK[billeteak_index];
-        if (dirua > 100) {
+        if (dirua >= 100) {
             return (dirua / 100) + "€";
         } else {
             return dirua + "cent";
@@ -451,6 +511,14 @@ public class ElorrietaVending {
      */
     static String heading(String input, int kopurua, String karakterea) {
         return karakterea.repeat(kopurua) + " " + input + " " + karakterea.repeat(kopurua);
+    }
+
+    /**
+     * Terminala garbitu
+     */
+    static void cls() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     /**

@@ -68,7 +68,7 @@ public class Orga {
     }
 
     /**
-     * Organ dauden produktu desberdinak bueltatzen ditu
+     * Organ dauden produktu desberdinak bueltatzen ditu.
      * 
      * Orga bi dimentsioko array bat da, non:
      * - orga[x][0] = produktuaren IDa
