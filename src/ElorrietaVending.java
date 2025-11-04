@@ -13,14 +13,14 @@ public class ElorrietaVending {
         // Moten izenak gorde {0: "Edariak", 1: "snack", ...}
         String[] mota_izenak = new String[MOTA_KOPURUA];
 
+        // Produtuen mota {0: 0, 1: 0, ...} Bigarren zenbakia, goiko produktuari egiten dio erreferentzia
+        int[] produktu_motak = new int[PRODUKTU_KOPURUA];
+
         // Produktuen izenak {0: "FritzKola", 1: "Aqua Pura", ...}
         String[] produktu_izenak = new String[PRODUKTU_KOPURUA];
 
         // Produktuen prezioak {0: 1.50, 1: 1.00, ... }
         double[] produktu_prezioak = new double[PRODUKTU_KOPURUA];
-
-        // Produtuen mota {0: 0, 1: 0, ...} // Biak edariak
-        int[] produktu_motak = new int[PRODUKTU_KOPURUA];
 
         // Zenbat ale dauden makinan {0: 3, 1: 2}
         // 0: produktua existitzen da baina makina honek ez ditu alerik
@@ -43,7 +43,6 @@ public class ElorrietaVending {
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
 
         // Bete orga -1 zenbakiekin (leku librea)
-
         for (int i = 0; i < orga.length; i++) {
             Arrays.fill(orga[i], -1);
         }
@@ -61,25 +60,26 @@ public class ElorrietaVending {
             System.out.println("5 Erosketa");
             System.out.println("6 Admin panela");
 
-            // lortuInt zenbaki oso bat erakusten dio erabiltzaileari, min eta max artean
+            // lortuInt zenbaki oso bat eskatzen dio erabiltzaileari, min eta max artean
             // (biak barne)
             int aukera = lortuInt(sc, "Aukeratu", 1, 6);
 
             switch (aukera) {
                 case 1:
                     System.out.println("Produktu Motak: ");
+                    // Motak erakutsi
                     for (int i = 0; i < mota_izenak.length; i++) {
-                        System.out.println((i + 1) + " - " + mota_izenak[i]);
+                        System.out.println((i + 1) + " - " + mota_izenak[i]); // i + 1 (1etik hasteko)
                     }
 
-                    int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
+                    int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1; // "- 1" gehitu (0tik hasteko)
 
                     // Lortu zenbat produktu dauden erabiltzaileak aukeratu duen motakoak
                     int motako_produktu_kop = Produktuak.produktuKopuruaMota(produktu_kantitatea, produktu_motak,
                             aukera_mota);
 
                     if (motako_produktu_kop == 0) {
-                        // Aukeratutako mota ez du produkturik
+                        // Aukeratutako mota ez du produkturik (Garrantzitsua da hau konprobatzea, ez geratzeko bukle baten)
                         System.err.println("Emandako motan ez daude aukeratu ahal diren produkturik!");
                         System.err.println("Saiatu beste mota batekin");
                         itxaronEnter(sc);
@@ -87,19 +87,28 @@ public class ElorrietaVending {
                     }
 
                     while (true) {
+                        // Erabiltzaileak aukeratutako mota duen produktuak erakutsi
                         Produktuak.produktuakErakutsiMotak(
                                 mota_izenak, aukera_mota, produktu_motak, produktu_kantitatea,
                                 produktu_izenak, produktu_prezioak);
 
-                        int aukera_produktua = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
+                        // Produktua eskatu erabiltzaileari
+                        int aukera_produktua = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1; // "- 1" gehitu (0tik hasteko)
 
                         if (produktu_kantitatea[aukera_produktua] == 0) {
-                            // Aukeratu duen produktua
+                            // Aukeratu duen produktua ez du alerik
+                            System.err.println("Aukeratu duzun produktua ez du alerik");
+                            continue; // Berriro erakutsi produktuak
+                        }
+
+                        if (produktu_kantitatea[aukera_produktua] == -1) {
+                            // Aukeratu duen produktua ez da existitzen (kantitatea == -1) 
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
                             continue; // Berriro erakutsi produktuak
                         }
 
                         if (produktu_motak[aukera_produktua] != aukera_mota) {
+                            // Aukeratu duen produktua ez da aukeratu duen motaren parte
                             System.err.println("Aukeratu duzun produktua ez da aukeratu duzun motaren parte");
                             continue; // Berriro erakutsi produktuak
                         }
@@ -124,18 +133,22 @@ public class ElorrietaVending {
                     }
                 case 2:
                     while (true) {
+                        // Zenbat produktu dauden lortu 
                         int produktuak_kopurua = Produktuak.produktuKopurua(produktu_kantitatea);
 
                         if (produktuak_kopurua == 0) {
+                            // Ez badaude aukeratzeko produkturik, bueltatu menu nagusira
                             System.err.println("Ez dago produkturik makinan!");
                             System.err.println("Deitu arreta zerbitzura, barkatu eragozpenak");
                             continue main_loop;
                         }
 
+                        // Produktu guztiak erakutsi
                         Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea, produktu_izenak,
                                 produktu_prezioak);
 
                         int aukera_produktua_1 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
+                        // Hemen, edozein produktu aukeratu dezake, gero behan balidatuko da aukera
 
                         if (produktu_kantitatea[aukera_produktua_1] == 0) {
                             System.err.println("Aukeratu duzun produktua ez du alerik");
@@ -145,8 +158,10 @@ public class ElorrietaVending {
                             continue;
                         }
 
+                        // Produtkua organ sartu
                         Orga.sartuProduktuaOrgan(orga, sc, produktu_kantitatea, aukera_produktua_1);
 
+                        // Galdetu zer egin nahi duen ondoren
                         System.out.println("1 Beste produktu bat gehitu");
                         System.out.println("2 Itzuli menu nagusira");
 
@@ -165,42 +180,47 @@ public class ElorrietaVending {
                 case 3:
                     System.out.println("Produktua kendu");
 
+                    // Ez badaude produkturik organ
                     if (Orga.organProduktuak(orga) == 0) {
                         System.err.println("Ez dago produkturik organ kentzeko");
                         itxaronEnter(sc);
                         break;
                     }
 
+                    // Orgaren item bakoitzeko
                     for (int i = 0; i < orga.length; i++) {
                         if (orga[i][1] > 0) {
-                            System.out.println((i + 1) + " " + produktu_izenak[i]);
+                            // Kantitatea 0 baino handiagoa bada,
+                            System.out.println((i + 1) + " " + produktu_izenak[i]); // Erakutsi. (i + 1) Batetik hasteko
                         }
                     }
+
                     int aukera_ezabatu = 0;
 
                     while (true) {
-                        aukera_ezabatu = lortuInt(sc, "Aukeratu ezabatzeko produktua", 1, orga.length) - 1;
+                        aukera_ezabatu = lortuInt(sc, "Aukeratu ezabatzeko produktua", 1, orga.length) - 1; // -1, Zerotik hasteko
                         if (orga[aukera_ezabatu][1] > 0) {
+                            // Aukeratu duen itemaren kantiatea > 0
+                            // Produktua ezabatu
+                            orga[aukera_ezabatu][0] = -1;
+                            orga[aukera_ezabatu][1] = -1;
                             break;
                         } else {
                             System.err.println("Produktua ez dago organ");
                         }
                     }
 
-                    orga[aukera_ezabatu] = new int[2];
-                    orga[aukera_ezabatu][0] = -1;
-                    orga[aukera_ezabatu][1] = -1;
-
                     itxaronEnter(sc);
 
                     break;
                 case 4:
                     double subtotal = round(Orga.orgaSubtotal(orga, produktu_prezioak), 2);
+                    double total = round(subtotal * 1.21, 2);
 
                     Laburpena.laburpena(orga, produktu_izenak, produktu_kantitatea, produktu_prezioak);
 
-                    System.out.println(heading(("Subtotala: " + subtotal), 3, "-"));
-                    System.out.println(heading(("Totala: " + round(subtotal * 1.21, 2)), 3, "-"));
+                    System.out.println(heading(("Subtotala:" + subtotal), 3, "-"));
+                    System.out.println(heading(("Totala:   " + total),    3, "-"));
 
                     itxaronEnter(sc);
 
@@ -208,12 +228,12 @@ public class ElorrietaVending {
                 case 5:
                     double prezioa = round(Orga.orgaSubtotal(orga, produktu_prezioak) * 1.21, 2);
 
-                    System.out.println(heading("Guztira " + prezioa, 5, "-"));
+                    System.out.println(heading("Totala:    " + prezioa, 5, "-"));
 
                     double emandakoa = 0.0;
 
                     while (emandakoa < prezioa) {
-                        System.out.println(round(prezioa - emandakoa, 2) + " Falta zaizu");
+                        System.out.println(round(prezioa - emandakoa, 2) + " falta zaizu");
                         emandakoa += round(lortuDouble(sc, "Sartu dirua makinan", 0.01, 999.0), 2);
                     }
 
@@ -228,27 +248,33 @@ public class ElorrietaVending {
 
                     for (int i = 0; i < dirua.length; i++) {
                         if (dirua[i] != 0) {
-                            System.out.println(diruaErakutsi(i) + " x " + dirua[i]);
+                            // Bueltatu behar diren txanpon/billete bakoitza erakutsi
+                            System.out.println(diruaErakutsi(i) + " x " + dirua[i]); // 2€ x 2
                         }
                     }
 
+                    // Makinatik produktuak kendu
                     Produktuak.produktuakErosiOrgatik(orga, produktu_kantitatea);
 
+                    // Orga hutsitu
                     for (int i = 0; i < orga.length; i++) {
-                        orga[i] = new int[] { -1, -1 }; // Orga hutsitu
+                        orga[i] = new int[] { -1, -1 };
                     }
 
+                    // Agur mezua
                     System.out.println(heading("Eskerrik asko Clankergan konfidatzearren! :D", 10, "-"));
 
                     try {
+                        // Bost segundu itxaron
                         Thread.sleep(5000);
                         cls();
                     } catch (Exception e) {
-                        // Ezer
+                        // Amaitzerakoan, ez egin ezer ez
                     }
 
                     break;
                 case 6:
+                    // Badaezpada, inputa garbitu
                     if (sc.hasNextLine()) {
                         sc.nextLine();
                     }
@@ -265,6 +291,7 @@ public class ElorrietaVending {
                         pasahitza = sc.nextLine();
                     }
 
+                    // Erabiltzailea bilatu
                     int erabiltzaile_indizea = linearSearch(erabiltzaileak, erabiltzailea);
 
                     if (erabiltzaile_indizea == -1) {
@@ -279,14 +306,16 @@ public class ElorrietaVending {
                         continue;
                     }
 
+                    // Stockik ez duen produktuen kopurua lortu
                     int stock_gabe_kop = Produktuak.produktuKopuruaStockGabe(produktu_kantitatea);
 
                     if (stock_gabe_kop > 0) {
-                        System.err.println(heading("ADI! " + stock_gabe_kop + " produktu daude stock gabe!", 10, "-"));
+                        System.out.println(heading("ADI! " + stock_gabe_kop + " produktu daude stock gabe!", 10, "-"));
                     }
 
                     System.out.println("Ongi etorri " + erabiltzaileak[erabiltzaile_indizea] + "!");
 
+                    // ADMIN PANELA
                     System.out.println(heading("ADMIN PANELA", 10, "*"));
 
                     System.out.println("1 Produktu berria");
@@ -303,28 +332,35 @@ public class ElorrietaVending {
 
                     switch (aukera_admin) {
                         case 1:
+                            // Produktu berria
+                            
+                            // Leku librea bilatu
                             int leku_librea = Produktuak.produktuakLekuLibrea(produktu_kantitatea);
 
                             if (leku_librea == -1) {
-                                System.err.println("Ez dago lekurik produktu berriak sarzeko");
+                                System.err.println("Ez dago lekurik produktu berriak sartzeko");
                                 break;
                             }
 
                             System.out.println("Idatzi produktuaren izen berria");
                             String produktu_izena = sc.nextLine();
 
+                            // Motak erakutsi
                             for (int i = 0; i < MOTA_KOPURUA; i++) {
                                 System.out.println((i + 1) + " - " + mota_izenak[i]);
                             }
-                            System.out.println("Idatzi produktuaren mota");
 
-                            int produktu_mota = lortuInt(sc, "Idatzi mota", 1, MOTA_KOPURUA) - 1;
+                            // Produktuaren mota eskatu
+                            int produktu_mota = lortuInt(sc, "Idatzi produktuaren mota", 1, MOTA_KOPURUA) - 1;
 
+                            // Produktuaren prezioa eskatu
                             double produktu_prezioa = lortuDouble(sc, "Idatzi produktuaren prezioa", 0.01, 99.9);
 
+                            // Produktuaren kantitatea eskatu
                             int produktu_berria_kantitatea = lortuInt(sc, "Idatzi zenbat produktu dauden", 1,
                                     10);
 
+                            // Ezarri eskatutatko atributuak
                             produktu_izenak[leku_librea] = produktu_izena;
                             produktu_motak[leku_librea] = produktu_mota;
                             produktu_kantitatea[leku_librea] = produktu_berria_kantitatea;
@@ -337,40 +373,51 @@ public class ElorrietaVending {
                             break;
                         case 2:
                             while (true) {
+                                // Produtkuak erakutsi (stocka dutenak bakarrik)
                                 Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea,
                                         produktu_izenak, produktu_prezioak);
 
+                                // Eskatu aldatu behar den produktua
                                 int aldatzeko_produktu_id = lortuInt(sc, "Aukeratu aldatzeko produktua", 1,
                                         PRODUKTU_KOPURUA) - 1;
 
+                                // Stockik ez badu, edo ez bada existitzen
                                 if (produktu_kantitatea[aldatzeko_produktu_id] <= 0) {
                                     System.err.println("Aukeratu duzun produktua ez da existitzen");
                                     continue;
                                 }
 
+                                // Lehenengo, produktuaren informazio guztia erakutsi
                                 System.out.println("Izena: " + produktu_izenak[aldatzeko_produktu_id]);
                                 System.out.println("Prezioa: " + produktu_prezioak[aldatzeko_produktu_id]);
                                 System.out.println("Mota: " + mota_izenak[produktu_motak[aldatzeko_produktu_id]] + " ("
-                                        + produktu_motak[aldatzeko_produktu_id] + ")");
-                                System.out.println("Kantitatea" + produktu_kantitatea[aldatzeko_produktu_id]);
+                                        + (produktu_motak[aldatzeko_produktu_id] + 1) + ")"); // Mota: Edariak (1)
+                                System.out.println("Kantitatea: " + produktu_kantitatea[aldatzeko_produktu_id]);
 
+
+                                // Izen berria
                                 String aldatzeko_izena = "";
                                 while (aldatzeko_izena.isEmpty()) {
                                     System.out.print("Idatzi izen berria: ");
                                     aldatzeko_izena = sc.nextLine();
                                 }
 
+                                // Prezio berria
                                 double aldatzeko_prezioa = lortuDouble(sc, "Idatzi prezio berria", 0.01, 99.9);
 
+                                // Motak erakutsi
                                 System.out.println("Produktu Motak: ");
                                 for (int i = 0; i < mota_izenak.length; i++) {
                                     System.out.println((i + 1) + " - " + mota_izenak[i]);
                                 }
 
+                                // Mota berria
                                 int aldatzeko_mota = lortuInt(sc, "Idatzi mota berria", 1, mota_izenak.length) - 1;
 
+                                // Kantitate berria
                                 int aldatzeko_kantitatea = lortuInt(sc, "Idatzi kantitate berria", 0, 10);
 
+                                // Ezarri balioak
                                 produktu_izenak[aldatzeko_produktu_id] = aldatzeko_izena;
                                 produktu_prezioak[aldatzeko_produktu_id] = aldatzeko_prezioa;
                                 produktu_motak[aldatzeko_produktu_id] = aldatzeko_mota;
@@ -384,46 +431,57 @@ public class ElorrietaVending {
                             break;
                         case 3:
                             while (true) {
+                                // Produktuak erakutsi
                                 Produktuak.produktuakErakutsi(mota_izenak, produktu_motak, produktu_kantitatea,
                                         produktu_izenak, produktu_prezioak);
 
+                                // Ezabatzeko produktua eskatu
                                 int ezabatzeko_produktua = lortuInt(sc, "Idatzi ezabazeko produktua", 1,
                                         PRODUKTU_KOPURUA)
                                         - 1;
 
+                                // Produktuak ez du stockik edo ez da existitzen
                                 if (produktu_kantitatea[ezabatzeko_produktua] <= 0) {
                                     System.err.println("Produktu hori ez da existitzen");
                                     continue;
                                 }
 
-                                produktu_kantitatea[ezabatzeko_produktua] = 0;
+                                // Kantiatea = -1: Ez da existitzen
+                                produktu_kantitatea[ezabatzeko_produktua] = -1;
 
                                 break;
                             }
                             break;
 
                         case 4:
-                            int restock_prod = -1;
+                            int restock_prod = -1; // Zer produkturen restock egingo den
                             while (true) {
+                                // Zenbat produktu daude stock gabe?
                                 stock_gabe_kop = Produktuak.produktuKopuruaStockGabe(produktu_kantitatea);
 
+                                // Ez badaude restock etiteko produkturik
                                 if (stock_gabe_kop <= 0) {
                                     System.err.println("Ez daude produkturik restock egiteko");
                                     itxaronEnter(sc);
                                     break;
                                 }
 
+                                // Stock gabeko produktuak erakutsi
                                 Produktuak.produktuakErakutsiAgortuak(mota_izenak, produktu_motak, produktu_kantitatea,
                                         produktu_izenak, produktu_prezioak);
 
+                                // Produktua aukeratu
                                 restock_prod = lortuInt(sc, "Aukeratu restock egiteko produktua", 0, PRODUKTU_KOPURUA)
                                         - 1;
 
-                                if (produktu_kantitatea[restock_prod] != 0) {
+                                if (produktu_kantitatea[restock_prod] <= 0) {
+                                    // Ez bada restock egin behar
                                     System.err.println("Produktu hori ez du restock egin behar");
                                 } else {
+                                    // Sartu egingo diren produktuak
                                     int restock_kant = lortuInt(sc, "Zenbat produktu sartuko dira?", 1, 10);
 
+                                    // Produktuaren kantitatea ezarri
                                     produktu_kantitatea[restock_prod] = restock_kant;
                                     System.out.println("Produktua arrakastaz gehituta");
 
@@ -435,22 +493,25 @@ public class ElorrietaVending {
                                     int aukera_restock = lortuInt(sc, "Aukeratu", 1, 2);
 
                                     if (aukera_restock == 2) {
+                                        // Menu nagusira itzuli
                                         break;
                                     }
+
+                                    // Beste restock bat egin
                                 }
                             }
 
                             break;
 
                         default:
+                            System.err.println("Errorea: Aukera 1 baino txikiago edo 4 baino handiagoa da");
                             continue main_loop;
                     }
 
                     break;
                 default:
                     System.err.println("Errorea: Aukera 1 baino txikiago edo 6 baino handiagoa da");
-                    return;
-
+                    continue main_loop;
             }
         }
     }
