@@ -10,7 +10,7 @@ public class ElorrietaVending {
         // Scanner sortu
         Scanner sc = new Scanner(System.in);
 
-        // Moten izenak gorde {0: "edariak", 1: "snack", ...}
+        // Moten izenak gorde {0: "Edariak", 1: "snack", ...}
         String[] mota_izenak = new String[MOTA_KOPURUA];
 
         // Produktuen izenak {0: "FritzKola", 1: "Aqua Pura", ...}
@@ -137,6 +137,9 @@ public class ElorrietaVending {
                         int aukera_produktua_1 = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1;
 
                         if (produktu_kantitatea[aukera_produktua_1] == 0) {
+                            System.err.println("Aukeratu duzun produktua ez du alerik");
+                            continue;
+                        } else if (produktu_kantitatea[aukera_produktua_1] == -1) {
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
                             continue;
                         }
@@ -184,6 +187,8 @@ public class ElorrietaVending {
                     }
 
                     orga[aukera_ezabatu] = new int[2];
+                    orga[aukera_ezabatu][0] = -1;
+                    orga[aukera_ezabatu][1] = -1;
 
                     itxaronEnter(sc);
 
