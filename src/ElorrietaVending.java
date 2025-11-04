@@ -43,6 +43,7 @@ public class ElorrietaVending {
         int[][] orga = new int[20][2]; // 20 item, non 2 zenbaki gordetzen diren: ida eta kopurua
 
         // Bete orga -1 zenbakiekin (leku librea)
+
         for (int i = 0; i < orga.length; i++) {
             Arrays.fill(orga[i], -1);
         }
@@ -429,7 +430,7 @@ public class ElorrietaVending {
                                     itxaronEnter(sc);
 
                                     System.out.println("1 Beste produktu bati restock egin");
-                                    System.out.println("2 Itzuli admin menura");
+                                    System.out.println("2 Itzuli menu nagusira");
 
                                     int aukera_restock = lortuInt(sc, "Aukeratu", 1, 2);
 
