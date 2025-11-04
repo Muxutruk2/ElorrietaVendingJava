@@ -2,17 +2,10 @@ import java.util.Scanner;
 
 public class Orga {
     /**
-     * Erosketa-orgaren laburpena kontsolan erakusten du.
-     * Taula batean IDa, izena, kantitatea, prezioa eta guztizkoa bistaratzen dira.
+     * Erosketa-orgaren lehen leku librearen ID-a buletatzen du. -1 bueltatzen du,
+     * ez badago
      *
-     * Orga parametroaren egitura:
-     * - orga[x][0] → produktuaren IDa
-     * - orga[x][1] → produktuaren kantitatea orgakoan
-     *
-     * @param orga                Erabiltzailearen orga
-     * @param produktu_izenak     produktu guztien izenak
-     * @param produktu_kantitatea produktu bakoitzaren eskura dagoen kantitatea
-     * @param produktu_prezioak   produktu bakoitzaren prezio unitarioa
+     * @param orga Erabiltzailearen orga
      * @return Lehen leku librearen indizea
      */
     public static int organLehenLekuLibrea(int[][] orga) {
@@ -26,10 +19,6 @@ public class Orga {
 
     /**
      * Produktua organ bilatzen du
-     * 
-     * Orga bi dimentsioko array bat da, non:
-     * - orga[x][0] = produktuaren IDa
-     * - orga[x][1] = produktuaren kantitatea organ
      * 
      * @param orga        Erabiltzaileak duen orga
      * @param produktu_id Produktuaren id-a
@@ -48,11 +37,6 @@ public class Orga {
      * Orgaren elementu guztien prezioak eta kantiateak erabiliz, subtotala
      * kalkulatu
      * 
-     * 
-     * Orga bi dimentsioko array bat da, non:
-     * - orga[x][0] = produktuaren IDa
-     * - orga[x][1] = produktuaren kantitatea organ
-     * 
      * @param orga               Erabiltzaileak duen orga
      * @param produktuak_prezioa Produktuen prezioa
      * @return Subtotala
@@ -69,10 +53,6 @@ public class Orga {
 
     /**
      * Organ dauden produktu desberdinak bueltatzen ditu.
-     * 
-     * Orga bi dimentsioko array bat da, non:
-     * - orga[x][0] = produktuaren IDa
-     * - orga[x][1] = produktuaren kantitatea organ
      * 
      * @param orga Erabiltzailearen orga
      * @return Produktu desberdinen kantitatea
@@ -167,6 +147,8 @@ public class Orga {
             // 0 bada, kendu produktua orgatik, baldin bazegoen
             if (produktua_orga_id != -1) {
                 orga[produktua_orga_id] = new int[2];
+                orga[produktua_orga_id][0] = -1;
+                orga[produktua_orga_id][1] = -1;
                 System.out.println("Produktua orgatik kendu da.");
             }
             return;
