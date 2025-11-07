@@ -13,7 +13,8 @@ public class ElorrietaVending {
         // Moten izenak gorde {0: "Edariak", 1: "snack", ...}
         String[] mota_izenak = new String[MOTA_KOPURUA];
 
-        // Produtuen mota {0: 0, 1: 0, ...} Bigarren zenbakia, goiko produktuari egiten dio erreferentzia
+        // Produtuen mota {0: 0, 1: 0, ...} Bigarren zenbakia, goiko produktuari egiten
+        // dio erreferentzia
         int[] produktu_motak = new int[PRODUKTU_KOPURUA];
 
         // Produktuen izenak {0: "FritzKola", 1: "Aqua Pura", ...}
@@ -72,14 +73,16 @@ public class ElorrietaVending {
                         System.out.println((i + 1) + " - " + mota_izenak[i]); // i + 1 (1etik hasteko)
                     }
 
-                    int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1; // "- 1" gehitu (0tik hasteko)
+                    int aukera_mota = lortuInt(sc, "Aukeratu produktu mota", 1, mota_izenak.length) - 1;
+                    // "- 1" gehitu (0tik hasteko)
 
                     // Lortu zenbat produktu dauden erabiltzaileak aukeratu duen motakoak
                     int motako_produktu_kop = Produktuak.produktuKopuruaMota(produktu_kantitatea, produktu_motak,
                             aukera_mota);
 
                     if (motako_produktu_kop == 0) {
-                        // Aukeratutako mota ez du produkturik (Garrantzitsua da hau konprobatzea, ez geratzeko bukle baten)
+                        // Aukeratutako mota ez du produkturik (Garrantzitsua da hau konprobatzea, ez
+                        // geratzeko bukle baten)
                         System.err.println("Emandako motan ez daude aukeratu ahal diren produkturik!");
                         System.err.println("Saiatu beste mota batekin");
                         itxaronEnter(sc);
@@ -93,7 +96,10 @@ public class ElorrietaVending {
                                 produktu_izenak, produktu_prezioak);
 
                         // Produktua eskatu erabiltzaileari
-                        int aukera_produktua = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1; // "- 1" gehitu (0tik hasteko)
+                        int aukera_produktua = lortuInt(sc, "Aukeratu produktua", 1, PRODUKTU_KOPURUA) - 1; // "- 1"
+                                                                                                            // gehitu
+                                                                                                            // (0tik
+                                                                                                            // hasteko)
 
                         if (produktu_kantitatea[aukera_produktua] == 0) {
                             // Aukeratu duen produktua ez du alerik
@@ -102,7 +108,7 @@ public class ElorrietaVending {
                         }
 
                         if (produktu_kantitatea[aukera_produktua] == -1) {
-                            // Aukeratu duen produktua ez da existitzen (kantitatea == -1) 
+                            // Aukeratu duen produktua ez da existitzen (kantitatea == -1)
                             System.err.println("Aukeratu duzun produktua ez da existitzen");
                             continue; // Berriro erakutsi produktuak
                         }
@@ -133,7 +139,7 @@ public class ElorrietaVending {
                     }
                 case 2:
                     while (true) {
-                        // Zenbat produktu dauden lortu 
+                        // Zenbat produktu dauden lortu
                         int produktuak_kopurua = Produktuak.produktuKopurua(produktu_kantitatea);
 
                         if (produktuak_kopurua == 0) {
@@ -198,7 +204,9 @@ public class ElorrietaVending {
                     int aukera_ezabatu = 0;
 
                     while (true) {
-                        aukera_ezabatu = lortuInt(sc, "Aukeratu ezabatzeko produktua", 1, orga.length) - 1; // -1, Zerotik hasteko
+                        aukera_ezabatu = lortuInt(sc, "Aukeratu ezabatzeko produktua", 1, orga.length) - 1; // -1,
+                                                                                                            // Zerotik
+                                                                                                            // hasteko
                         if (orga[aukera_ezabatu][1] > 0) {
                             // Aukeratu duen itemaren kantiatea > 0
                             // Produktua ezabatu
@@ -216,11 +224,16 @@ public class ElorrietaVending {
                 case 4:
                     double subtotal = round(Orga.orgaSubtotal(orga, produktu_prezioak), 2);
                     double total = round(subtotal * 1.21, 2);
+                    try {
+                        Orga.orgaSubtotal(orga, produktu_prezioak);
+                    } catch (Exception e) {
+                        System.err.println("Ezin izan da subtotala kalkulatu!");
+                    }
 
                     Laburpena.laburpena(orga, produktu_izenak, produktu_kantitatea, produktu_prezioak);
 
                     System.out.println(heading(("Subtotala:" + subtotal), 3, "-"));
-                    System.out.println(heading(("Totala:   " + total),    3, "-"));
+                    System.out.println(heading(("Totala:   " + total), 3, "-"));
 
                     itxaronEnter(sc);
 
@@ -333,7 +346,7 @@ public class ElorrietaVending {
                     switch (aukera_admin) {
                         case 1:
                             // Produktu berria
-                            
+
                             // Leku librea bilatu
                             int leku_librea = Produktuak.produktuakLekuLibrea(produktu_kantitatea);
 
@@ -393,7 +406,6 @@ public class ElorrietaVending {
                                 System.out.println("Mota: " + mota_izenak[produktu_motak[aldatzeko_produktu_id]] + " ("
                                         + (produktu_motak[aldatzeko_produktu_id] + 1) + ")"); // Mota: Edariak (1)
                                 System.out.println("Kantitatea: " + produktu_kantitatea[aldatzeko_produktu_id]);
-
 
                                 // Izen berria
                                 String aldatzeko_izena = "";

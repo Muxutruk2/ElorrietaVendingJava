@@ -45,7 +45,8 @@ public class Produktuak {
      * @param modua               1 = >0 , 2 = motaID eta >0, 3 = ==0
      * @param motaID              motaID balioa modua==2 bada
      */
-    private static void erakutsiTaula(String[] mota_izenak, int[] produktu_motak,
+    private static void erakutsiTaula(
+            String[] mota_izenak, int[] produktu_motak,
             int[] produktu_kantitatea, String[] produktu_izenak, double[] produktu_prezioak,
             int modua, int motaID) {
 

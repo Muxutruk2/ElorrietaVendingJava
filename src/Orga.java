@@ -70,10 +70,6 @@ public class Orga {
     /**
      * Produktu bat sartu edo eguneratu orga batean.
      * 
-     * Orga bi dimentsioko array bat da, non:
-     * - orga[x][0] = produktuaren IDa
-     * - orga[x][1] = produktuaren kantitatea organ
-     * 
      * Funtzio honek honako prozesua egiten du:
      * 1. Aukeratutako produktua existitzen dela egiaztatzen du produktu_kantitatea
      * array-an.
@@ -86,7 +82,7 @@ public class Orga {
      * - Ale bat baino gehiago bada, erabiltzaileari galdetzen zaio kantitatea
      * sartzeko.
      * 5. Kantitatea 0 bada:
-     * - Produktua orgatik kendu egiten da (bada badago).
+     * - Produktua orgatik kendu egiten da (baldin badago).
      * 6. Kantitatea > 0 bada:
      * - Produktua jada organ badago, kantitatea eguneratzen da.
      * - Produktua organ ez badago, lehen leku librean gehitzen da.
